@@ -22,6 +22,12 @@ import DictionaryHome from './components/DictionaryHome';
 import DictionaryText from './components/DictionaryText';
 import DictionaryVideo from './components/DictionaryVideo';
 import DictionaryQuiz from './components/DictionaryQuize';
+import FunctionHome from './components/FunctionHome';
+import FunctionText from './components/FunctionText';
+import FunctionVideo from './components/FunctionVideo';
+import FunctionQuiz from './components/FunctionQuize';
+import ConditionalVideo from './components/ConditionalVideo';
+import ConditionalQuiz from './components/ConditionalQuize';
 
 
 function App() {
@@ -37,6 +43,8 @@ function App() {
                     <Route path="/variables/video" element={<VariablesVideo />} />
                     <Route path="/conditional-home" element={<ConditionalHome />} />
                     <Route path="/conditional/text" element={<ConditionalText />} />
+                    <Route path="/conditional/video" element={<ConditionalVideo />} />
+                    <Route path="/conditional/test" element={<ConditionalQuiz />} />
                     <Route path="/variables/test" element={<VariablesQuiz />} />
                     <Route path="/list-home" element={<ListHome />} />
                     <Route path="/list/text" element={<ListText />} />
@@ -51,6 +59,10 @@ function App() {
                     <Route path="/dictionary/text" element={<DictionaryText />} />
                     <Route path="/dictionary/video" element={<DictionaryVideo />} />
                     <Route path="/dictionary/test" element={<DictionaryQuiz />} />
+                    <Route path="/function-home" element={<FunctionHome />} />
+                    <Route path="/function/text" element={<FunctionText />} />
+                    <Route path="/function/video" element={<FunctionVideo />} />
+                    <Route path="/function/test" element={<FunctionQuiz />} />
                 </Routes>
             </AuthProvider>
         </Router>

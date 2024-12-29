@@ -3,9 +3,9 @@ import { db } from '../firebase'; // Import Firebase database
 import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore methods
 import { useAuth } from './context/AuthContext';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook from React Router
-import './DictionaryQuiz.css'; // Importing the CSS for animation and styling
+import './ConditionalQuiz.css'; // Importing the CSS for animation and styling
 
-const DictionaryQuiz = () => {
+const ConditionalQuiz = () => {
     const { user } = useAuth();
     const navigate = useNavigate(); // Initialize the navigate function
     const [score, setScore] = useState(0);
@@ -19,35 +19,56 @@ const DictionaryQuiz = () => {
     // Define some sample questions and answers
     const questions = [
         {
-            question: "What is a dictionary in Python?",
+            question: "What is the purpose of the `if` statement in Python?",
             options: [
-                "An ordered list of items",
-                "A collection of key-value pairs",
-                "A type of loop",
-                "A mathematical function"
+                "To declare a variable", 
+                "To check a condition", 
+                "To loop through a sequence", 
+                "To define a function"
             ],
-            answer: "A collection of key-value pairs"
+            answer: "To check a condition"
         },
         {
-            question: "How are dictionaries created in Python?",
+            question: "Which of the following is used to check additional conditions after the `if` statement?",
             options: [
-                "my_dict = (key1: value1, key2: value2)",
-                "my_dict = {key1, value1, key2, value2}",
-                "my_dict = [key1: value1, key2: value2]",
-                "my_dict = {'key1': 'value1', 'key2': 'value2'}"
+                "if", 
+                "elif", 
+                "else", 
+                "for"
             ],
-            answer: "my_dict = {'key1': 'value1', 'key2': 'value2'}"
+            answer: "elif"
         },
         {
-            question: "Which of the following is true about dictionary keys in Python?",
+            question: "Which statement in Python is executed when all previous conditions are False?",
             options: [
-                "Keys must be mutable",
-                "Keys must be unique",
-                "Keys can be duplicated",
-                "Keys must be numbers"
+                "if", 
+                "elif", 
+                "else", 
+                "return"
             ],
-            answer: "Keys must be unique"
+            answer: "else"
+        },
+        {
+            question: "What is the purpose of the `else` statement in Python?",
+            options: [
+                "To handle the case when the condition is True", 
+                "To check multiple conditions", 
+                "To define a function", 
+                "To execute code when all conditions are False"
+            ],
+            answer: "To execute code when all conditions are False"
+        },
+        {
+            question: "Which operator is used to combine multiple conditions in an `if` statement?",
+            options: [
+                "and", 
+                "or", 
+                "not", 
+                "all of the above"
+            ],
+            answer: "all of the above"
         }
+        
     ];
    
 
@@ -63,8 +84,8 @@ const DictionaryQuiz = () => {
 
                     if (userScoreDoc.exists()) {
                         const data = userScoreDoc.data();
-                        setPreviousScore(data.dictionaryScore || 0); // Change from variablesScore to dictionaryScore
-                        if (data.dictionaryScore >= passingScore) { // Update for dictionaryScore
+                        setPreviousScore(data.conditionalScore || 0); // If no score exists, default to 0
+                        if (data.conditionalScore >= passingScore) {
                             setCanProceedToConditional(true);
                         } else {
                             setCanProceedToConditional(false);
@@ -116,7 +137,7 @@ const DictionaryQuiz = () => {
 
         try {
             const userScoreRef = doc(db, 'users', user.uid);
-            await setDoc(userScoreRef, { dictionaryScore: calculatedScore }, { merge: true }); // Update to dictionaryScore
+            await setDoc(userScoreRef, { conditionalScore: calculatedScore }, { merge: true });
             console.log("Score saved to database!");
         } catch (error) {
             console.error("Error saving score:", error);
@@ -158,7 +179,7 @@ const DictionaryQuiz = () => {
 
     return (
         <div className="quiz-container">
-            <h1>Dictionary Quiz</h1>
+            <h1>Conditional Quiz</h1>
 
             {/* Display Previous Score if available */}
             {previousScore !== null && (
@@ -216,4 +237,4 @@ const DictionaryQuiz = () => {
     );
 };
 
-export default DictionaryQuiz;
+export default ConditionalQuiz;

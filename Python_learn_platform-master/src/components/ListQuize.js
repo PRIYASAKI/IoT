@@ -3,7 +3,7 @@ import { db } from '../firebase'; // Import Firebase database
 import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore methods
 import { useAuth } from './context/AuthContext';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook from React Router
-import './ListQuize.css'; // Importing the CSS for animation and styling
+import './ListQuiz.css'; // Importing the CSS for animation and styling
 
 const ListQuiz = () => {
     const { user } = useAuth();
@@ -21,9 +21,9 @@ const ListQuiz = () => {
         {
             question: "What is a list in Python?",
             options: [
-                "A mutable string", 
-                "An ordered collection of items", 
-                "A function", 
+                "A mutable string",
+                "An ordered collection of items",
+                "A function",
                 "A module"
             ],
             answer: "An ordered collection of items"
@@ -31,9 +31,9 @@ const ListQuiz = () => {
         {
             question: "How are lists created in Python?",
             options: [
-                "my_list = (1, 2, 3)", 
-                "my_list = {1, 2, 3}", 
-                "my_list = [1, 2, 3]", 
+                "my_list = (1, 2, 3)",
+                "my_list = {1, 2, 3}",
+                "my_list = [1, 2, 3]",
                 "my_list = <1, 2, 3>"
             ],
             answer: "my_list = [1, 2, 3]"
@@ -41,15 +41,15 @@ const ListQuiz = () => {
         {
             question: "Which of the following is true about lists in Python?",
             options: [
-                "Lists are immutable", 
-                "List elements can't be changed", 
-                "Lists are mutable", 
+                "Lists are immutable",
+                "List elements can't be changed",
+                "Lists are mutable",
                 "Lists can only store integers"
             ],
             answer: "Lists are mutable"
         }
     ];
-    
+   
 
     const passingScore = Math.ceil(questions.length * 0.7); // Passing score is 70%
 
@@ -63,8 +63,8 @@ const ListQuiz = () => {
 
                     if (userScoreDoc.exists()) {
                         const data = userScoreDoc.data();
-                        setPreviousScore(data.variablesScore || 0); // If no score exists, default to 0
-                        if (data.variablesScore >= passingScore) {
+                        setPreviousScore(data.listScore || 0); // If no score exists, default to 0
+                        if (data.listScore >= passingScore) {
                             setCanProceedToConditional(true);
                         } else {
                             setCanProceedToConditional(false);
@@ -116,7 +116,7 @@ const ListQuiz = () => {
 
         try {
             const userScoreRef = doc(db, 'users', user.uid);
-            await setDoc(userScoreRef, { variablesScore: calculatedScore }, { merge: true });
+            await setDoc(userScoreRef, { listScore: calculatedScore }, { merge: true });
             console.log("Score saved to database!");
         } catch (error) {
             console.error("Error saving score:", error);
@@ -158,63 +158,63 @@ const ListQuiz = () => {
 
     return (
         <div className="quiz-container">
-    <h1>Variables Quiz</h1>
+            <h1>List Quiz</h1>
 
-    {/* Display Previous Score if available */}
-    {previousScore !== null && (
-        <p className="score-display">Your Previous Score: {previousScore} / {questions.length}</p>
-    )}
+            {/* Display Previous Score if available */}
+            {previousScore !== null && (
+                <p className="score-display">Your Previous Score: {previousScore} / {questions.length}</p>
+            )}
 
-    {!submitted && (
-        <div className="timer">Time Left: {timeLeft} seconds</div>
-    )}
+            {!submitted && (
+                <div className="timer">Time Left: {timeLeft} seconds</div>
+            )}
 
-    <form onSubmit={handleQuizSubmit}>
-        {/* Display the current question */}
-        <div className="question-container">
-            <h3>{questions[currentQuestionIndex].question}</h3>
-            {questions[currentQuestionIndex].options.map((option, optIndex) => (
-                <div key={optIndex}>
-                    <input
-                        type="checkbox"
-                        id={`q${currentQuestionIndex}o${optIndex}`}
-                        name={`question${currentQuestionIndex}`}
-                        value={option}
-                        checked={selectedAnswers[currentQuestionIndex] === option}
-                        onChange={() => handleAnswerChange(currentQuestionIndex, option)}
-                    />
-                    <label htmlFor={`q${currentQuestionIndex}o${optIndex}`}>{option}</label>
+            <form onSubmit={handleQuizSubmit}>
+                {/* Display the current question */}
+                <div className="question-container">
+                    <h3>{questions[currentQuestionIndex].question}</h3>
+                    {questions[currentQuestionIndex].options.map((option, optIndex) => (
+                        <div key={optIndex}>
+                            <input
+                                type="checkbox"
+                                id={`q${currentQuestionIndex}o${optIndex}`}
+                                name={`question${currentQuestionIndex}`}
+                                value={option}
+                                checked={selectedAnswers[currentQuestionIndex] === option}
+                                onChange={() => handleAnswerChange(currentQuestionIndex, option)}
+                            />
+                            <label htmlFor={`q${currentQuestionIndex}o${optIndex}`}>{option}</label>
+                        </div>
+                    ))}
                 </div>
-            ))}
-        </div>
 
-        {/* Navigation buttons */}
-        <div>
-            {currentQuestionIndex > 0 && (
-                <button type="button" onClick={goToPreviousQuestion}>Previous</button>
+                {/* Navigation buttons */}
+                <div>
+                    {currentQuestionIndex > 0 && (
+                        <button type="button" onClick={goToPreviousQuestion}>Previous</button>
+                    )}
+                    {currentQuestionIndex < questions.length - 1 && !submitted && (
+                        <button type="button" onClick={goToNextQuestion}>Next</button>
+                    )}
+                </div>
+
+                {/* Submit button */}
+                {!submitted && currentQuestionIndex === questions.length - 1 && (
+                    <button type="submit">Submit</button>
+                )}
+            </form>
+
+            {submitted && (
+                <div className="appreciation-message">
+                    <h2>Your Score: {score} / {questions.length}</h2>
+                    <h3 className="message">{getAppreciationMessage()}</h3>
+                    <button className="retakes" onClick={retakeQuiz}>Retake Test</button>
+                    <button className="back-home" onClick={handleBackToMainPage}>Back to Main Page</button>
+                </div>
             )}
-            {currentQuestionIndex < questions.length - 1 && !submitted && (
-                <button type="button" onClick={goToNextQuestion}>Next</button>
-            )}
         </div>
-
-        {/* Submit button */}
-        {!submitted && currentQuestionIndex === questions.length - 1 && (
-            <button type="submit">Submit</button>
-        )}
-    </form>
-
-    {submitted && (
-        <div className="appreciation-message">
-            <h2>Your Score: {score} / {questions.length}</h2>
-            <h3 className="message">{getAppreciationMessage()}</h3>
-            <button className="retakes" onClick={retakeQuiz}>Retake Test</button>
-            <button className="back-home" onClick={handleBackToMainPage}>Back to Main Page</button>
-        </div>
-    )}
-</div>
-
     );
 };
 
 export default ListQuiz;
+

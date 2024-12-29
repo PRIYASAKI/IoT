@@ -1,0 +1,30 @@
+/* VariablesText.css */
+
+.container {
+    background-color:rgb(185, 204, 217);  /* Light gray background */
+    padding: 20px;               /* Padding around the content */
+    border-radius: 8px;          /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(24, 9, 9, 0.1); /* Subtle shadow */
+    max-width: 600px;            /* Limit the max width of the container */
+    margin: 20px auto;           /* Center align */
+    font-family: Arial, sans-serif; /* Use a clean font */
+}
+
+h1 {
+    color: #333;                 /* Dark gray color for the heading */
+    text-align: center;          /* Center align the heading */
+    font-size: 2em;              /* Increase heading size */
+    margin-bottom: 15px;         /* Space below the heading */
+}
+
+p {
+    color: #555;                 /* Slightly lighter gray for text */
+    line-height: 1.6;            /* Increase line height for readability */
+    margin: 10px 0;              /* Space between paragraphs */
+    font-size: 1.5em;            /* Slightly larger font size */
+}
+
+p::before {
+    content: "• ";               /* Add a bullet before each paragraph */
+    color: #ff0000;              /* Blue color for the bullet */
+}

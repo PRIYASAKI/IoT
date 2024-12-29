@@ -1,17 +1,17 @@
 import React from 'react';
 import YouTube from 'react-youtube';
 
-const DictionaryVideo = () => {
+const ConditionalVideo = () => {
     const onReady = (event) => {
         event.target.pauseVideo(); // Optional: control the video
     };
 
     return (
         <div>
-            <h1>Dictionary - Video Tutorial</h1>
-            <YouTube videoId="wwrODmqc4jc" onReady={onReady} />
+            <h1>Conditional - Video Tutorial</h1>
+            <YouTube videoId="Zp5MuPOtsSY" onReady={onReady} />
         </div>
     );
 };
 
-export default DictionaryVideo;
+export default ConditionalVideo;

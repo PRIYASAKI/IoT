@@ -43,9 +43,7 @@ const SetQuiz = () => {
             options: ["insert()", "append()", "add()", "extend()"],
             correctAnswer: 2,
         }
-        
     ];
-    
 
     const passingScore = Math.ceil(questions.length * 0.7); // Passing score is 70%
 
@@ -59,8 +57,8 @@ const SetQuiz = () => {
 
                     if (userScoreDoc.exists()) {
                         const data = userScoreDoc.data();
-                        setPreviousScore(data.variablesScore || 0); // If no score exists, default to 0
-                        if (data.variablesScore >= passingScore) {
+                        setPreviousScore(data.setScore || 0); // If no score exists, default to 0
+                        if (data.setScore >= passingScore) {
                             setCanProceedToConditional(true);
                         } else {
                             setCanProceedToConditional(false);
@@ -97,7 +95,7 @@ const SetQuiz = () => {
         let calculatedScore = 0;
         questions.forEach((question, index) => {
             const selectedAnswer = selectedAnswers[index];
-            if (selectedAnswer === question.answer) {
+            if (selectedAnswer === question.options[question.correctAnswer]) {
                 calculatedScore += 1;
             }
         });
@@ -112,7 +110,7 @@ const SetQuiz = () => {
 
         try {
             const userScoreRef = doc(db, 'users', user.uid);
-            await setDoc(userScoreRef, { variablesScore: calculatedScore }, { merge: true });
+            await setDoc(userScoreRef, { setScore: calculatedScore }, { merge: true });
             console.log("Score saved to database!");
         } catch (error) {
             console.error("Error saving score:", error);
@@ -154,63 +152,63 @@ const SetQuiz = () => {
 
     return (
         <div className="quiz-container">
-    <h1>Variables Quiz</h1>
+            <h1>Set Quiz</h1>
 
-    {/* Display Previous Score if available */}
-    {previousScore !== null && (
-        <p className="score-display">Your Previous Score: {previousScore} / {questions.length}</p>
-    )}
+            {/* Display Previous Score if available */}
+            {previousScore !== null && (
+                <p className="score-display">Your Previous Score: {previousScore} / {questions.length}</p>
+            )}
 
-    {!submitted && (
-        <div className="timer">Time Left: {timeLeft} seconds</div>
-    )}
+            {!submitted && (
+                <div className="timer">Time Left: {timeLeft} seconds</div>
+            )}
 
-    <form onSubmit={handleQuizSubmit}>
-        {/* Display the current question */}
-        <div className="question-container">
-            <h3>{questions[currentQuestionIndex].question}</h3>
-            {questions[currentQuestionIndex].options.map((option, optIndex) => (
-                <div key={optIndex}>
-                    <input
-                        type="checkbox"
-                        id={`q${currentQuestionIndex}o${optIndex}`}
-                        name={`question${currentQuestionIndex}`}
-                        value={option}
-                        checked={selectedAnswers[currentQuestionIndex] === option}
-                        onChange={() => handleAnswerChange(currentQuestionIndex, option)}
-                    />
-                    <label htmlFor={`q${currentQuestionIndex}o${optIndex}`}>{option}</label>
+            <form onSubmit={handleQuizSubmit}>
+                {/* Display the current question */}
+                <div className="question-container">
+                    <h3>{questions[currentQuestionIndex].question}</h3>
+                    {questions[currentQuestionIndex].options.map((option, optIndex) => (
+                        <div key={optIndex}>
+                            <input
+                                type="checkbox"
+                                id={`q${currentQuestionIndex}o${optIndex}`}
+                                name={`question${currentQuestionIndex}`}
+                                value={option}
+                                checked={selectedAnswers[currentQuestionIndex] === option}
+                                onChange={() => handleAnswerChange(currentQuestionIndex, option)}
+                            />
+                            <label htmlFor={`q${currentQuestionIndex}o${optIndex}`}>{option}</label>
+                        </div>
+                    ))}
                 </div>
-            ))}
-        </div>
 
-        {/* Navigation buttons */}
-        <div>
-            {currentQuestionIndex > 0 && (
-                <button type="button" onClick={goToPreviousQuestion}>Previous</button>
+                {/* Navigation buttons */}
+                <div>
+                    {currentQuestionIndex > 0 && (
+                        <button type="button" onClick={goToPreviousQuestion}>Previous</button>
+                    )}
+                    {currentQuestionIndex < questions.length - 1 && !submitted && (
+                        <button type="button" onClick={goToNextQuestion}>Next</button>
+                    )}
+                </div>
+
+                {/* Submit button */}
+                {!submitted && currentQuestionIndex === questions.length - 1 && (
+                    <button type="submit">Submit</button>
+                )}
+            </form>
+
+            {submitted && (
+                <div className="appreciation-message">
+                    <h2>Your Score: {score} / {questions.length}</h2>
+                    <h3 className="message">{getAppreciationMessage()}</h3>
+                    <button className="retakes" onClick={retakeQuiz}>Retake Test</button>
+                    <button className="back-home" onClick={handleBackToMainPage}>Back to Main Page</button>
+                </div>
             )}
-            {currentQuestionIndex < questions.length - 1 && !submitted && (
-                <button type="button" onClick={goToNextQuestion}>Next</button>
-            )}
         </div>
-
-        {/* Submit button */}
-        {!submitted && currentQuestionIndex === questions.length - 1 && (
-            <button type="submit">Submit</button>
-        )}
-    </form>
-
-    {submitted && (
-        <div className="appreciation-message">
-            <h2>Your Score: {score} / {questions.length}</h2>
-            <h3 className="message">{getAppreciationMessage()}</h3>
-            <button className="retakes" onClick={retakeQuiz}>Retake Test</button>
-            <button className="back-home" onClick={handleBackToMainPage}>Back to Main Page</button>
-        </div>
-    )}
-</div>
-
     );
 };
 
 export default SetQuiz;
+

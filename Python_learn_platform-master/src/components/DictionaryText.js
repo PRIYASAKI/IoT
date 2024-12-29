@@ -1,5 +1,5 @@
 import React from 'react';
-import './DictionariesText.css';  // Assuming you will create a similar CSS file for styling
+import './DictionaryText.css';  // Assuming you will create a similar CSS file for styling
 
 const DictionaryText = () => {
     return (

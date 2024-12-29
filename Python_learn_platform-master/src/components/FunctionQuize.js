@@ -3,9 +3,9 @@ import { db } from '../firebase'; // Import Firebase database
 import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore methods
 import { useAuth } from './context/AuthContext';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook from React Router
-import './DictionaryQuiz.css'; // Importing the CSS for animation and styling
+import './FunctionQuiz.css'; // Importing the CSS for animation and styling
 
-const DictionaryQuiz = () => {
+const FunctionQuiz = () => {
     const { user } = useAuth();
     const navigate = useNavigate(); // Initialize the navigate function
     const [score, setScore] = useState(0);
@@ -19,37 +19,36 @@ const DictionaryQuiz = () => {
     // Define some sample questions and answers
     const questions = [
         {
-            question: "What is a dictionary in Python?",
+            question: "What is a function in Python?",
             options: [
-                "An ordered list of items",
-                "A collection of key-value pairs",
-                "A type of loop",
-                "A mathematical function"
+                "A reusable block of code",
+                "A type of variable",
+                "A data structure",
+                "A loop structure"
             ],
-            answer: "A collection of key-value pairs"
+            answer: "A reusable block of code"
         },
         {
-            question: "How are dictionaries created in Python?",
+            question: "How do you define a function in Python?",
             options: [
-                "my_dict = (key1: value1, key2: value2)",
-                "my_dict = {key1, value1, key2, value2}",
-                "my_dict = [key1: value1, key2: value2]",
-                "my_dict = {'key1': 'value1', 'key2': 'value2'}"
+                "def function_name()",
+                "function def()",
+                "function_name = def()",
+                "def: function_name()"
             ],
-            answer: "my_dict = {'key1': 'value1', 'key2': 'value2'}"
+            answer: "def function_name()"
         },
         {
-            question: "Which of the following is true about dictionary keys in Python?",
+            question: "What does the 'return' keyword do in a Python function?",
             options: [
-                "Keys must be mutable",
-                "Keys must be unique",
-                "Keys can be duplicated",
-                "Keys must be numbers"
+                "It terminates the function",
+                "It starts the function",
+                "It returns a value from the function",
+                "It prints the function result"
             ],
-            answer: "Keys must be unique"
+            answer: "It returns a value from the function"
         }
     ];
-   
 
     const passingScore = Math.ceil(questions.length * 0.7); // Passing score is 70%
 
@@ -63,8 +62,8 @@ const DictionaryQuiz = () => {
 
                     if (userScoreDoc.exists()) {
                         const data = userScoreDoc.data();
-                        setPreviousScore(data.dictionaryScore || 0); // Change from variablesScore to dictionaryScore
-                        if (data.dictionaryScore >= passingScore) { // Update for dictionaryScore
+                        setPreviousScore(data.functionScore || 0); // If no score exists, default to 0
+                        if (data.functionScore >= passingScore) {
                             setCanProceedToConditional(true);
                         } else {
                             setCanProceedToConditional(false);
@@ -116,7 +115,7 @@ const DictionaryQuiz = () => {
 
         try {
             const userScoreRef = doc(db, 'users', user.uid);
-            await setDoc(userScoreRef, { dictionaryScore: calculatedScore }, { merge: true }); // Update to dictionaryScore
+            await setDoc(userScoreRef, { functionScore: calculatedScore }, { merge: true });
             console.log("Score saved to database!");
         } catch (error) {
             console.error("Error saving score:", error);
@@ -158,7 +157,7 @@ const DictionaryQuiz = () => {
 
     return (
         <div className="quiz-container">
-            <h1>Dictionary Quiz</h1>
+            <h1>Function Quiz</h1>
 
             {/* Display Previous Score if available */}
             {previousScore !== null && (
@@ -216,4 +215,5 @@ const DictionaryQuiz = () => {
     );
 };
 
-export default DictionaryQuiz;
+export default FunctionQuiz;
+
